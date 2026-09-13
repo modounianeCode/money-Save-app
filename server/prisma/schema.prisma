@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  password     String
+  categories   Category[]
+  transactions Transaction[]
+  budgets      Budget[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String
+  icon         String        @default("📁")
+  color        String        @default("#6366f1")
+  isDefault    Boolean       @default(false)
+  isIncome     Boolean       @default(false)
+  ownerId      String?
+  owner        User?         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([ownerId])
+}
+
+model Transaction {
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  type        String    // "EXPENSE" | "INCOME"
+  amount      Int
+  description String?
+  date        DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+  amount     Int
+  month      String // "YYYY-MM"
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, categoryId, month])
+  @@index([userId])
+  @@index([categoryId])
+}
