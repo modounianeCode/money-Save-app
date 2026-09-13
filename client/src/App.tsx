@@ -8,6 +8,7 @@ import Transactions from "./pages/Transactions";
 import Budgets from "./pages/Budgets";
 import Stats from "./pages/Stats";
 import Categories from "./pages/Categories";
+import AiPage from "./pages/AiPage";
 
 function Protected({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/budgets" element={<Budgets />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/conseils" element={<AiPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

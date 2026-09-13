@@ -7,6 +7,7 @@ Application web de gestion de budget personnel (en FCFA) : suivi des dépenses e
 - **Frontend** : React + Vite + Tailwind + Recharts
 - **Backend** : Node.js + Express + Prisma
 - **Base de données** : PostgreSQL (via Docker Compose)
+- **Assistant IA** : Ollama (local) + llama3.1:8b — tout tourne sur ta machine
 
 ## Démarrage rapide
 
@@ -48,3 +49,27 @@ Toutes les routes (sauf `auth/login` et `auth/register`) exigent un header `Auth
 - `GET|POST /api/transactions` · `PUT|DELETE /api/transactions/:id`
 - `GET|POST /api/budgets?month=YYYY-MM` · `DELETE /api/budgets/:id`
 - `GET /api/stats/month` · `/by-category` · `/monthly` · `/budget-alerts`
+- `POST /api/ai/chat` · `GET /api/ai/insights` · `GET /api/ai/forecast` · `POST /api/ai/categorize`
+
+## Assistant IA — Nafi 🤖
+
+L'assistant « Nafi » tourne localement via [Ollama](https://ollama.com). Aucune donnée n'est envoyée à un service externe.
+
+**Prérequis** : [Ollama](https://ollama.com/download) installé, puis :
+```bash
+ollama pull llama3.1:8b
+```
+
+**Configuration** (dans `server/.env`) :
+```
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.1:8b
+```
+
+**Fonctionnalités** :
+- **Chat conversationnel** 💬 — widget flottant sur toutes les pages : dis « j'ai dépensé 5000 en transport » et Nafi l'enregistre automatiquement dans tes transactions.
+- **Recommandations personnalisées** 📋 — page « Conseils » : analyse de tes habitudes, budgets en risque, suggestions d'économie.
+- **Prévisions mensuelles** 🔮 — estimation des dépenses et revenus du mois prochain.
+- **Catégorisation automatique** 🏷️ — décris une dépense en texte libre et Nafi identifie la bonne catégorie.
+
+> ⚠️ Les réponses prennent entre 30 secondes et 2 minutes (modèle 8B sur CPU). Pour accélérer, passe à un modèle plus petit (`qwen2.5:3b`) ou utilise un GPU.

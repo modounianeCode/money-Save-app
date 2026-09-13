@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { currentMonth, monthLabel } from "../lib/format";
+import AiChatWidget from "./AiChatWidget";
 
 const navItems = [
   { to: "/", label: "Tableau de bord", icon: "📊" },
@@ -8,6 +9,7 @@ const navItems = [
   { to: "/budgets", label: "Budgets", icon: "🎯" },
   { to: "/stats", label: "Statistiques", icon: "📈" },
   { to: "/categories", label: "Catégories", icon: "🗂️" },
+  { to: "/conseils", label: "Conseils", icon: "🤖" },
 ];
 
 export default function Layout() {
@@ -59,6 +61,7 @@ export default function Layout() {
       <main className="max-w-6xl mx-auto px-4 py-6">
         <Outlet />
       </main>
+      <AiChatWidget />
     </div>
   );
 }
