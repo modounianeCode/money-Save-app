@@ -70,12 +70,11 @@ L'appli se déploie sur Vercel : frontend statique (Vite) + API Express en fonct
 
 1. Va sur [vercel.com](https://vercel.com) → **Add New Project** → importe le dépôt `money-Save-app`.
 2. Vercel détecte `vercel.json` (build des fonctions + rewrite `/api/*`).
-3. Paramètres du projet :
-   - Remplace la commande de build par : `npm run db:generate && npm run build`
-4. **Environment Variables** (Settings → Environment Variables) :
+3. Paramètres du projet : la commande de build du dashboard est **ignorée** car `vercel.json` définit `builds` — le build statique et les fonctions sont gérés par le fichier. `prisma generate` s'exécute automatiquement via `postinstall` au moment du `npm install`.
+4. **Environment Variables** (Settings → Environment Variables) : copie les valeurs depuis `.env.local` (déjà remplies) :
    ```
-   DATABASE_URL=postgresql://... (la base Neon)
-   JWT_SECRET=<un secret fort>
+   DATABASE_URL=<la valeur de DATABASE_URL dans .env.local>
+   JWT_SECRET=<la valeur de JWT_SECRET dans .env.local>
    AI_ENABLED=false
    ```
 5. **Deploy**.
