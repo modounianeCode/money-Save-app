@@ -1,12 +1,19 @@
 import { Router } from "express";
 import { requireAuth, AuthRequest } from "../middleware/auth.js";
 import { aiChat, aiInsights, aiForecast, aiCategorize } from "../ai/agent.js";
-import { ollamaChat } from "../ai/ollama.js";
+import { ollamaChat, isAiEnabled } from "../ai/ollama.js";
 
 const router = Router();
 router.use(requireAuth);
 
+const AI_DISABLED_MESSAGE =
+  "Nafi (l'assistant IA) n'est pas disponible sur cette version hébergée en ligne. Installe l'application en local avec Ollama pour profiter du chat, des conseils et des prévisions.";
+
 router.get("/ping", async (_req: AuthRequest, res) => {
+  if (!isAiEnabled()) {
+    res.json({ status: "disabled", message: AI_DISABLED_MESSAGE });
+    return;
+  }
   try {
     await ollamaChat({
       messages: [{ role: "user", content: "Bonjour" }],
@@ -28,6 +35,11 @@ router.post("/chat", async (req: AuthRequest, res) => {
     return;
   }
 
+  if (!isAiEnabled()) {
+    res.json({ message: AI_DISABLED_MESSAGE, transaction: undefined });
+    return;
+  }
+
   const history = messages
     .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
     .slice(-10);
@@ -42,6 +54,10 @@ router.post("/chat", async (req: AuthRequest, res) => {
 });
 
 router.get("/insights", async (req: AuthRequest, res) => {
+  if (!isAiEnabled()) {
+    res.json({ insights: [{ title: "IA non disponible en ligne", detail: AI_DISABLED_MESSAGE }] });
+    return;
+  }
   try {
     const insights = await aiInsights(req.user!.id);
     res.json({ insights });
@@ -52,6 +68,15 @@ router.get("/insights", async (req: AuthRequest, res) => {
 });
 
 router.get("/forecast", async (req: AuthRequest, res) => {
+  if (!isAiEnabled()) {
+    res.json({
+      expenses: 0,
+      income: 0,
+      reasoning: AI_DISABLED_MESSAGE,
+      advice: "",
+    });
+    return;
+  }
   try {
     const forecast = await aiForecast(req.user!.id);
     res.json(forecast);
@@ -65,6 +90,10 @@ router.post("/categorize", async (req: AuthRequest, res) => {
   const { description } = req.body || {};
   if (!description?.trim()) {
     res.status(400).json({ error: "description est requis" });
+    return;
+  }
+  if (!isAiEnabled()) {
+    res.json({ category: null, message: AI_DISABLED_MESSAGE });
     return;
   }
   try {

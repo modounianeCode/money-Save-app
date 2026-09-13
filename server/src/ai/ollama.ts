@@ -16,7 +16,11 @@ interface GenerateOptions {
 }
 
 export function isOllamaAvailable(): boolean {
-  return Boolean(process.env.AI_DISABLED) === false;
+  return process.env.AI_ENABLED !== "false";
+}
+
+export function isAiEnabled(): boolean {
+  return process.env.AI_ENABLED !== "false";
 }
 
 export async function ollamaChat(
