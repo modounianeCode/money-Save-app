@@ -45,18 +45,21 @@ export default function Stats() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-xl font-bold">📈 Statistiques</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3 animate-in">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">📈 Statistiques</h1>
+          <p className="text-sm text-slate-500">Visualise où va ton argent</p>
+        </div>
         <input
           type="month"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="px-3 py-2 border border-slate-300 rounded-lg bg-white"
+          className="input w-auto bg-white"
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="card p-6">
           <h2 className="font-semibold mb-1">Répartition des dépenses · {monthLabel(month)}</h2>
           <p className="text-sm text-slate-500 mb-4">Total : {formatFCFA(total)}</p>
           {pieData.length === 0 ? (
@@ -77,7 +80,7 @@ export default function Stats() {
           )}
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="card p-6">
           <h2 className="font-semibold mb-1">Détail par catégorie</h2>
           <div className="space-y-3 mt-4">
             {byCategory.length === 0 && (
@@ -105,7 +108,7 @@ export default function Stats() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-sm">
+      <div className="card p-6">
         <h2 className="font-semibold mb-4">Évolution sur 6 mois</h2>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">

@@ -56,19 +56,19 @@ export default function Categories() {
   const incomes = categories.filter((c) => c.isIncome);
 
   const renderList = (list: Category[], editable: boolean) => (
-    <div className="bg-white rounded-2xl shadow-sm divide-y divide-slate-100">
+    <div className="card overflow-hidden divide-y divide-slate-100">
       {list.map((c) => (
-        <div key={c.id} className="flex items-center gap-3 px-5 py-3">
+        <div key={c.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50/60 transition">
           <span
-            className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-            style={{ backgroundColor: `${c.color}22` }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+            style={{ backgroundColor: `${c.color}1f` }}
           >
             {c.icon}
           </span>
           <span className="font-medium flex-1">{c.name}</span>
-          {c.isDefault && <span className="text-xs text-slate-400">prédéfinie</span>}
+          {c.isDefault && <span className="text-xs text-slate-400 bg-slate-100 rounded-full px-2 py-0.5">prédéfinie</span>}
           {editable && (
-            <button onClick={() => remove(c)} className="text-slate-400 hover:text-red-600 text-sm px-2">
+            <button onClick={() => remove(c)} className="text-slate-400 hover:text-red-600 text-sm px-2 hover:bg-red-50 rounded-lg transition">
               🗑️
             </button>
           )}
@@ -79,12 +79,12 @@ export default function Categories() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">🗂️ Catégories</h1>
-        <button
-          onClick={openCreate}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition"
-        >
+      <div className="flex items-center justify-between animate-in">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">🗂️ Catégories</h1>
+          <p className="text-sm text-slate-500">Organise tes dépenses et revenus</p>
+        </div>
+        <button onClick={openCreate} className="btn-primary">
           + Nouvelle catégorie
         </button>
       </div>
@@ -106,7 +106,7 @@ export default function Categories() {
               required
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="input"
               placeholder="Ex : Abonnements"
             />
           </div>
@@ -168,7 +168,7 @@ export default function Categories() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition"
+            className="w-full btn-primary justify-center py-3"
           >
             {saving ? "Création…" : "Créer"}
           </button>

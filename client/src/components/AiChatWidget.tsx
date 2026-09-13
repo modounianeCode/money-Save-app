@@ -66,12 +66,12 @@ export default function AiChatWidget() {
   return (
     <>
       <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center transition"
-        title="Parler à Nafi 🤖"
-      >
-        {open ? "✕" : "🤖"}
-      </button>
+            onClick={() => setOpen((o) => !o)}
+            className="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white text-2xl shadow-lg shadow-indigo-600/40 flex items-center justify-center transition active:scale-95"
+            title="Parler à Nafi 🤖"
+          >
+            {open ? "✕" : "🤖"}
+          </button>
 
       {open && (
         <div className="fixed bottom-24 right-5 z-40 w-[360px] max-w-[calc(100vw-2.5rem)] h-[520px] max-h-[70vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200">
@@ -133,7 +133,7 @@ export default function AiChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ex : j'ai dépensé 3000 en basket…"
-              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 input"
             />
             <button
               type="submit"

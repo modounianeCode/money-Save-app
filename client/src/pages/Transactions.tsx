@@ -96,12 +96,12 @@ export default function Transactions() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-xl font-bold">💸 Transactions</h1>
-        <button
-          onClick={openCreate}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition"
-        >
+      <div className="flex items-center justify-between flex-wrap gap-3 animate-in">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">💸 Transactions</h1>
+          <p className="text-sm text-slate-500">Suis chaque entrée et sortie d'argent</p>
+        </div>
+        <button onClick={openCreate} className="btn-primary">
           + Nouvelle transaction
         </button>
       </div>
@@ -111,8 +111,10 @@ export default function Transactions() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
-              filter === f ? "bg-slate-900 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+            className={`chip ${
+              filter === f
+                ? "bg-slate-900 text-white shadow"
+                : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
             }`}
           >
             {f === "ALL" ? "Toutes" : f === "EXPENSE" ? "Dépenses" : "Revenus"}
@@ -120,18 +122,21 @@ export default function Transactions() {
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm">
+      <div className="card overflow-hidden">
         {transactions.length === 0 && (
-          <p className="p-6 text-slate-500 text-sm">Aucune transaction trouvée.</p>
+          <div className="p-10 text-center text-slate-500 text-sm">
+            Aucune transaction trouvée. Clique sur « + Nouvelle transaction » pour commencer.
+          </div>
         )}
+        <div className="divide-y divide-slate-100">
         {transactions.map((t) => (
           <div
             key={t.id}
-            className="flex items-center gap-3 px-5 py-3 border-b border-slate-100 last:border-0"
+            className="flex items-center gap-3 px-5 py-3.5 hover:bg-slate-50/60 transition group"
           >
             <span
-              className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-              style={{ backgroundColor: `${t.category.color}22` }}
+              className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0"
+              style={{ backgroundColor: `${t.category.color}1f` }}
             >
               {t.category.icon}
             </span>
@@ -142,22 +147,23 @@ export default function Transactions() {
               </p>
             </div>
             <span
-              className={`font-semibold whitespace-nowrap ${
+              className={`font-bold whitespace-nowrap ${
                 t.type === "INCOME" ? "text-green-600" : "text-red-500"
               }`}
             >
               {t.type === "INCOME" ? "+" : "−"}{formatFCFA(t.amount)}
             </span>
-            <div className="flex gap-1">
-              <button onClick={() => openEdit(t)} className="text-slate-400 hover:text-indigo-600 text-sm px-2">
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+              <button onClick={() => openEdit(t)} className="text-slate-400 hover:text-indigo-600 text-sm px-2 hover:bg-indigo-50 rounded-lg">
                 ✏️
               </button>
-              <button onClick={() => remove(t)} className="text-slate-400 hover:text-red-600 text-sm px-2">
+              <button onClick={() => remove(t)} className="text-slate-400 hover:text-red-600 text-sm px-2 hover:bg-red-50 rounded-lg">
                 🗑️
               </button>
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       <Modal
@@ -196,7 +202,7 @@ export default function Transactions() {
             <select
               value={form.categoryId}
               onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="input"
             >
               <option value="">Choisir…</option>
               {(form.type === "INCOME" ? incomeCategories : expenseCategories).map((c) => (
@@ -215,7 +221,7 @@ export default function Transactions() {
               required
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="input"
               placeholder="5000"
             />
           </div>
@@ -226,7 +232,7 @@ export default function Transactions() {
               type="text"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="input"
               placeholder="Ex : Courses au marché"
             />
           </div>
@@ -238,7 +244,7 @@ export default function Transactions() {
               value={form.date}
               max={new Date().toISOString().slice(0, 10)}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="input"
             />
           </div>
 
@@ -247,7 +253,7 @@ export default function Transactions() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition"
+            className="w-full btn-primary justify-center py-3 text-base"
           >
             {saving ? "Enregistrement…" : editing ? "Enregistrer" : "Ajouter"}
           </button>

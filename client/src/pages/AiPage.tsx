@@ -77,7 +77,7 @@ export default function AiPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold">🤖 Conseils Nafi</h1>
+        <h1 className="text-2xl font-bold tracking-tight">🤖 Conseils Nafi</h1>
         <p className="text-sm text-slate-500">
           Analyses basées sur tes données, générées localement par l'IA. Une génération prend environ 1 à 2 minutes.
         </p>
@@ -86,13 +86,13 @@ export default function AiPage() {
       {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{error}</p>}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-slate-200/60">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold">📋 Recommandations personnalisées</h2>
             <button
               onClick={loadInsights}
               disabled={loadingInsights}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition"
+              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition shadow-sm shadow-indigo-600/20"
             >
               {loadingInsights ? "Analyse…" : insights ? "Régénérer" : "Générer"}
             </button>
@@ -127,13 +127,13 @@ export default function AiPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-slate-200/60">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold">🔮 Prévision · {nextMonth()}</h2>
               <button
                 onClick={loadForecast}
                 disabled={loadingForecast}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition"
+                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition shadow-sm shadow-indigo-600/20"
               >
                 {loadingForecast ? "Calcul…" : forecast ? "Régénérer" : "Prévoir"}
               </button>
@@ -162,19 +162,19 @@ export default function AiPage() {
             )}
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-slate-200/60">
             <h2 className="font-semibold mb-3">🏷️ Catégorisation automatique</h2>
             <form onSubmit={runCategorize} className="flex gap-2">
               <input
                 value={catDesc}
                 onChange={(e) => setCatDesc(e.target.value)}
                 placeholder="Ex : rechargement crédit téléphone"
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 input"
               />
               <button
                 type="submit"
                 disabled={catLoading || !catDesc.trim()}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-4 rounded-lg transition"
+                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-4 rounded-lg transition shadow-sm shadow-indigo-600/20"
               >
                 {catLoading ? "…" : "Tester"}
               </button>
