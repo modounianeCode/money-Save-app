@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches: [main, modou]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Configurer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Générer le client Prisma
+        working-directory: server
+        run: npx prisma generate
+
+      - name: Typecheck du serveur
+        working-directory: server
+        run: npx tsc --noEmit
+
+      - name: Build du client (React)
+        run: npm run build
