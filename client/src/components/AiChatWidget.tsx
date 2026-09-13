@@ -22,6 +22,8 @@ const suggestions = [
   "Mon budget est-il en danger ?",
 ];
 
+const SESSION_FLAG = "moneysave.nafi.auto";
+
 export default function AiChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -33,6 +35,13 @@ export default function AiChatWidget() {
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
   }, [messages, loading, open]);
+
+  useEffect(() => {
+    if (sessionStorage.getItem(SESSION_FLAG) === "done") return;
+    sessionStorage.setItem(SESSION_FLAG, "done");
+    setOpen(true);
+    api("/ai/ping").catch(() => {});
+  }, []);
 
   const send = async (text: string) => {
     const content = text.trim();

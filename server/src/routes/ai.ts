@@ -1,9 +1,23 @@
 import { Router } from "express";
 import { requireAuth, AuthRequest } from "../middleware/auth.js";
 import { aiChat, aiInsights, aiForecast, aiCategorize } from "../ai/agent.js";
+import { ollamaChat } from "../ai/ollama.js";
 
 const router = Router();
 router.use(requireAuth);
+
+router.get("/ping", async (_req: AuthRequest, res) => {
+  try {
+    await ollamaChat({
+      messages: [{ role: "user", content: "Bonjour" }],
+      numPredict: 1,
+      timeoutMs: 30000,
+    });
+    res.json({ status: "ok" });
+  } catch {
+    res.json({ status: "unavailable" });
+  }
+});
 
 router.post("/chat", async (req: AuthRequest, res) => {
   const userId = req.user!.id;
