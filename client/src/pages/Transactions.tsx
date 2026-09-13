@@ -20,6 +20,7 @@ export default function Transactions() {
   const [filter, setFilter] = useState<"ALL" | "EXPENSE" | "INCOME">("ALL");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
+  const [typeLocked, setTypeLocked] = useState(false);
   const [form, setForm] = useState<TxForm>(emptyForm);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -37,15 +38,17 @@ export default function Transactions() {
     load();
   }, [filter]);
 
-  const openCreate = () => {
+  const openCreate = (type: "EXPENSE" | "INCOME") => {
     setEditing(null);
-    setForm({ ...emptyForm, date: new Date().toISOString().slice(0, 10) });
+    setTypeLocked(true);
+    setForm({ ...emptyForm, type, date: new Date().toISOString().slice(0, 10) });
     setError("");
     setModalOpen(true);
   };
 
   const openEdit = (tx: Transaction) => {
     setEditing(tx);
+    setTypeLocked(false);
     setForm({
       type: tx.type,
       categoryId: tx.categoryId,
@@ -101,9 +104,20 @@ export default function Transactions() {
           <h1 className="text-2xl font-bold tracking-tight">💸 Transactions</h1>
           <p className="text-sm text-slate-500">Suis chaque entrée et sortie d'argent</p>
         </div>
-        <button onClick={openCreate} className="btn-primary">
-          + Nouvelle transaction
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => openCreate("EXPENSE")}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-red-500/20 active:scale-[0.98]"
+          >
+            − Dépense
+          </button>
+          <button
+            onClick={() => openCreate("INCOME")}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-green-600/20 active:scale-[0.98]"
+          >
+            + Revenu
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2">
@@ -169,33 +183,47 @@ export default function Transactions() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editing ? "Modifier la transaction" : "Nouvelle transaction"}
+        title={
+          editing
+            ? "Modifier la transaction"
+            : form.type === "INCOME"
+            ? "Nouveau revenu"
+            : "Nouvelle dépense"
+        }
       >
         <form onSubmit={submit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, type: "EXPENSE" })}
-              className={`py-2 rounded-lg font-medium border transition ${
-                form.type === "EXPENSE"
-                  ? "bg-red-50 border-red-300 text-red-600"
-                  : "border-slate-200 text-slate-500"
-              }`}
-            >
-              Dépense
-            </button>
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, type: "INCOME" })}
-              className={`py-2 rounded-lg font-medium border transition ${
-                form.type === "INCOME"
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "border-slate-200 text-slate-500"
-              }`}
-            >
-              Revenu
-            </button>
-          </div>
+          {typeLocked ? (
+            <div className="flex items-center justify-center gap-2 py-2 rounded-xl font-medium bg-slate-50 ring-1 ring-slate-200">
+              {form.type === "INCOME"
+                ? "✅ Revenu"
+                : "💸 Dépense"}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, type: "EXPENSE" })}
+                className={`py-2 rounded-lg font-medium border transition ${
+                  form.type === "EXPENSE"
+                    ? "bg-red-50 border-red-300 text-red-600"
+                    : "border-slate-200 text-slate-500"
+                }`}
+              >
+                Dépense
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, type: "INCOME" })}
+                className={`py-2 rounded-lg font-medium border transition ${
+                  form.type === "INCOME"
+                    ? "bg-green-50 border-green-300 text-green-600"
+                    : "border-slate-200 text-slate-500"
+                }`}
+              >
+                Revenu
+              </button>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium mb-1">Catégorie</label>
